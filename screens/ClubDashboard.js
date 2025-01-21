@@ -1,4 +1,4 @@
-// ClubDashboard.js
+//ClubDashboard.js
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 
@@ -9,7 +9,7 @@ const ClubDashboard = ({ route, navigation }) => {
     <ScrollView style={styles.container}>
       {/* Top Bar */}
       <View style={styles.topBar}>
-        <TouchableOpacity onPress={() => { /* handle sign out or profile */ }} style={styles.icon}>
+        <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.icon}>
           <Text>☰</Text>
         </TouchableOpacity>
         <Text style={styles.logo}>{clubName}</Text>
@@ -32,10 +32,13 @@ const ClubDashboard = ({ route, navigation }) => {
         </View>
       </View>
 
-      {/* Club Actions */}
+      {/* Add Notice Button */}
       <View style={styles.actionsSection}>
-        <TouchableOpacity style={styles.actionButton}>
-          <Text style={styles.actionText}>Add a Post</Text>
+        <TouchableOpacity
+          style={styles.actionButton}
+          onPress={() => navigation.navigate('AddNotice', { clubName })}
+        >
+          <Text style={styles.actionText}>Add a Notice</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.actionButton}>
           <Text style={styles.actionText}>View Ratings & Followers</Text>
@@ -49,53 +52,16 @@ const ClubDashboard = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  topBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 10,
-    backgroundColor: '#4CAF50',
-  },
-  icon: {
-    padding: 5,
-  },
-  logo: {
-    fontSize: 20,
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  postsSection: {
-    marginTop: 20,
-    padding: 10,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  post: {
-    backgroundColor: '#f0f0f0',
-    padding: 15,
-    marginBottom: 10,
-    borderRadius: 10,
-  },
-  actionsSection: {
-    marginTop: 20,
-    padding: 10,
-  },
-  actionButton: {
-    backgroundColor: '#4CAF50',
-    padding: 15,
-    marginBottom: 10,
-    borderRadius: 10,
-  },
-  actionText: {
-    color: '#fff',
-    fontSize: 16,
-    textAlign: 'center',
-  },
+  container: { flex: 1, backgroundColor: '#fff' },
+  topBar: { flexDirection: 'row', justifyContent: 'space-between', padding: 10, backgroundColor: '#4CAF50' },
+  icon: { padding: 5 },
+  logo: { fontSize: 20, color: '#fff', fontWeight: 'bold' },
+  postsSection: { marginTop: 20, padding: 10 },
+  sectionTitle: { fontSize: 18, fontWeight: 'bold' },
+  post: { backgroundColor: '#f0f0f0', padding: 15, marginBottom: 10, borderRadius: 10 },
+  actionsSection: { marginTop: 20, padding: 10 },
+  actionButton: { backgroundColor: '#4CAF50', padding: 15, marginBottom: 10, borderRadius: 10 },
+  actionText: { color: '#fff', fontSize: 16, textAlign: 'center' },
 });
 
 export default ClubDashboard;
