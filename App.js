@@ -1,107 +1,124 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-// Importing Screens
+// Import Screens
 import HomeScreen from './screens/HomeScreen';
-import ClubDashboard from './screens/ClubDashboard';
 import AddNotice from './screens/AddNotice';
 import ProfileScreen from './screens/ProfileScreen';
 import ProfileEditScreen from './screens/ProfileEditScreen';
 import Signup from './screens/Signup';
+import Login from './screens/Login';
+import ClubDashboard from './screens/ClubDashboard';
+import ClubProfileScreen from './screens/ClubProfile';
+import UpdateDashboard from './screens/UpdateDashboard';
+import AboutUs from './screens/AboutUs';
+import ContactUs from './screens/ContactUs';
 
 // Creating Stack and Drawer Navigators
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
-// Main Stack (Handles Home and other main screens like Add Notice, Club Dashboard)
+// Theme for the App
+const BlueTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#007BFF',
+    background: '#f0f8ff',
+    text: '#000',
+    card: '#0056b3',
+    border: '#00A3E0',
+    notification: '#007BFF',
+  },
+};
+
+// Main Stack for Home & Club Dashboard
 function MainStack() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="HomeScreen"
-        component={HomeScreen}
-        options={{ headerShown: false }} // Hides header for Home screen
-      />
-      <Stack.Screen
-        name="ClubDashboard"
-        component={ClubDashboard}
-        options={{ headerShown: false }} // Hides header for Club Dashboard screen
-      />
-      <Stack.Screen
-        name="AddNotice"
-        component={AddNotice}
-        options={{ headerShown: false }} // Hides header for Add Notice screen
-      />
+    <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: '#007BFF' }, headerTintColor: '#FFF' }}>
+      <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="ClubDashboard" component={ClubDashboard} options={{ headerShown: false }} />
+      <Stack.Screen name="ContactUs" component={ContactUs} options={{ headerShown: false }} />
+      <Stack.Screen name="AboutUs" component={AboutUs} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }
 
-// Profile Stack (Handles Profile View & Edit)
+// Profile Stack for Student
 function ProfileStack() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="ProfileView"
-        component={ProfileScreen}
-        options={{ headerShown: false }} // Hides header for Profile screen
-      />
-      <Stack.Screen
-        name="ProfileEdit"
-        component={ProfileEditScreen}
-        options={{ headerShown: false }} // Hides header for Profile Edit screen
-      />
+    <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: '#007BFF' }, headerTintColor: '#FFF' }}>
+      <Stack.Screen name="ProfileView" component={ProfileScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="ProfileEdit" component={ProfileEditScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }
 
-// Drawer Navigator (Main App after Signup)
-function DrawerNavigator() {
+// Club Stack for Club-related pages
+function ClubStack() {
   return (
-    <Drawer.Navigator initialRouteName="Home">
-      <Drawer.Screen
-        name="Home"
-        component={MainStack}
-        options={{ title: 'Infonix Home', headerShown: false }} // Ensures no header in Home
+    <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: '#007BFF' }, headerTintColor: '#FFF' }}>
+      <Stack.Screen name="ClubProfile" component={ClubProfileScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="AddNotice" component={AddNotice} options={{ headerShown: false }} />
+      <Stack.Screen name="UpdateDashboard" component={UpdateDashboard} options={{ headerShown: false }} />
+      <Stack.Screen name="AboutUs" component={AboutUs} options={{ headerShown: false }} />
+      <Stack.Screen name="ContactUs" component={ContactUs} options={{ headerShown: false }} />
+    </Stack.Navigator>
+  );
+}
+
+// Custom Drawer Content with Logout Button
+function CustomDrawerContent(props) {
+  return (
+    <DrawerContentScrollView {...props}>
+      <DrawerItemList {...props} />
+      <DrawerItem
+        label="Sign Out"
+        labelStyle={{ color: '#000', fontWeight: 'bold' }}
+        onPress={() => {
+          props.navigation.reset({ index: 0, routes: [{ name: 'Signup' }] });
+        }}
       />
-      <Drawer.Screen
-        name="Profile"
-        component={ProfileStack}
-        options={{ title: 'Student Profile', headerShown: false }} // Hides header for Profile
-      />
-      <Drawer.Screen
-        name="Sign Out"
-        component={SignOut} // Sign Out functionality remains the same
-        options={{ title: 'Sign Out' }}
-      />
+    </DrawerContentScrollView>
+  );
+}
+
+// Drawer Navigator for Students & Clubs
+function DrawerNavigator({ route }) {
+  const { userType } = route.params;
+
+  return (
+    <Drawer.Navigator
+      initialRouteName="Home"
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
+      screenOptions={{
+        drawerActiveTintColor: '#FFF',
+        drawerActiveBackgroundColor: '#007BFF',
+        drawerInactiveTintColor: '#000',
+        headerStyle: { backgroundColor: '#0056b3' },
+        headerTintColor: '#FFF',
+      }}
+    >
+      <Drawer.Screen name="Home" component={MainStack} options={{ title: 'Infonix Home', headerShown: false }} />
+      {userType === 'student' && (
+        <Drawer.Screen name="StudentProfile" component={ProfileStack} options={{ title: 'Student Profile', headerShown: false }} />
+      )}
+      {userType === 'club' && (
+        <Drawer.Screen name="ClubSection" component={ClubStack} options={{ title: 'Club Profile', headerShown: false }} />
+      )}
     </Drawer.Navigator>
   );
 }
 
-// SignOut Function: Handle sign-out and navigate to Signup
-function SignOut({ navigation }) {
-  React.useEffect(() => {
-    navigation.navigate("Signup");
-  }, []);
-
-  return null;
-}
-
-// Main Stack (Handles Signup -> Main App)
+// Main Stack Flow (Signup -> Main App)
 function MainStackFlow() {
   return (
     <Stack.Navigator initialRouteName="Signup">
-      <Stack.Screen
-        name="Signup"
-        component={Signup}
-        options={{ headerShown: false }} // Hides header for Signup screen
-      />
-      <Stack.Screen
-        name="MainApp"
-        component={DrawerNavigator}
-        options={{ headerShown: false }} // Hides header for the main app
-      />
+      <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
+      <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+      <Stack.Screen name="MainApp" component={DrawerNavigator} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }
@@ -109,7 +126,7 @@ function MainStackFlow() {
 // Main App Component
 export default function App() {
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={BlueTheme}>
       <MainStackFlow />
     </NavigationContainer>
   );

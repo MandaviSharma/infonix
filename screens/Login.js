@@ -1,43 +1,33 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
-const Signup = ({ navigation }) => {
-  const [name, setName] = useState('');
+const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [userType, setUserType] = useState('student');  // Defaulting to 'student'
+  const [userType, setUserType] = useState('student'); // Default role is student
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Handle Signup and Navigate to Home
-  const handleSignup = () => {
+  // Handle Login and Navigate to Home
+  const handleLogin = () => {
     setError('');
-    if (!name || !email || !password) {
-      setError('Please fill in all fields');
+    if (!email || !password) {
+      setError('Please enter both email and password');
       return;
     }
-    // Add further validation logic as required (e.g., email format check)
 
     setLoading(true);
 
-    // Simulating a network request (e.g., signup)
+    // Simulate a network request for login
     setTimeout(() => {
       setLoading(false);
-      // If signup successful, navigate
+      // After successful login, navigate to MainApp and pass the userType
       navigation.replace('MainApp', { userType });
     }, 2000);
   };
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Full Name"
-        placeholderTextColor="#666"
-        value={name}
-        onChangeText={setName}
-      />
-
       <TextInput
         style={styles.input}
         placeholder="Email Address"
@@ -61,7 +51,7 @@ const Signup = ({ navigation }) => {
 
       {/* User Type Selection */}
       <View style={styles.userTypeContainer}>
-        <Text style={styles.userTypeText}>I am signing up as a:</Text>
+        <Text style={styles.userTypeText}>I am logging in as a:</Text>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={[styles.userTypeButton, userType === 'student' && styles.selectedButton]}
@@ -79,13 +69,13 @@ const Signup = ({ navigation }) => {
         </View>
       </View>
 
-      {/* Signup Button */}
-      <TouchableOpacity style={styles.button} onPress={handleSignup} disabled={loading}>
-        <Text style={styles.buttonText}>{loading ? 'Signing up...' : 'Sign Up'}</Text>
+      {/* Login Button */}
+      <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
+        <Text style={styles.buttonText}>{loading ? 'Logging in...' : 'Log In'}</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.replace('Login')}>
-        <Text style={styles.linkText}>Already have an account? Log in</Text>
+      <TouchableOpacity onPress={() => navigation.replace('Signup')}>
+        <Text style={styles.linkText}>Don't have an account? Sign Up</Text>
       </TouchableOpacity>
     </View>
   );
@@ -94,7 +84,7 @@ const Signup = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#f8f9fa', // Light Gray Background
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
@@ -103,16 +93,16 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 15,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#ccc', // Subtle Gray Border
     borderRadius: 8,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#ffffff', // White Input Fields
     marginBottom: 15,
     fontSize: 16,
-    color: '#212529',
+    color: '#212529', // Dark Gray Text
   },
   button: {
     width: '100%',
-    backgroundColor: '#007bff',
+    backgroundColor: '#007bff', // Primary Blue
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
@@ -124,7 +114,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   linkText: {
-    color: '#007bff',
+    color: '#007bff', // Primary Blue for Link
     marginTop: 15,
     fontSize: 16,
   },
@@ -159,4 +149,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Signup;
+export default Login;

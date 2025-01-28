@@ -44,12 +44,12 @@ const ProfileEditScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff', padding: 20 },
-  title: { fontSize: 22, fontWeight: 'bold', marginBottom: 20 },
+  container: { flex: 1, backgroundColor: '#E3F2FD', padding: 20 },
+  title: { fontSize: 22, fontWeight: 'bold', marginBottom: 20, color: '#0D47A1' },
   section: { marginBottom: 20 },
-  label: { fontSize: 16, fontWeight: 'bold', marginBottom: 5 },
-  input: { borderWidth: 1, borderColor: '#ccc', padding: 10, borderRadius: 5 },
-  saveButton: { backgroundColor: '#4CAF50', padding: 15, borderRadius: 5, alignItems: 'center' },
+  label: { fontSize: 16, fontWeight: 'bold', marginBottom: 5, color: '#1976D2' },
+  input: { borderWidth: 1, borderColor: '#90CAF9', padding: 10, borderRadius: 5, backgroundColor: '#FFFFFF' },
+  saveButton: { backgroundColor: '#1976D2', padding: 15, borderRadius: 5, alignItems: 'center' },
   saveButtonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
 });
 

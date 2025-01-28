@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 
-const ClubDashboard = ({ navigation }) => {
+const ClubProfileScreen = ({ navigation }) => {
   return (
     <ScrollView style={styles.container}>
       {/* Club Info Section */}
@@ -35,6 +35,16 @@ const ClubDashboard = ({ navigation }) => {
         <View style={styles.post}>
           <Text style={styles.postText}>Post 3</Text>
         </View>
+      </View>
+
+      {/* Action Buttons */}
+      <View style={styles.actionsSection}>
+        <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('AddNotice')}>
+          <Text style={styles.actionText}>Add a Notice</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('UpdateDashboard')}>
+          <Text style={styles.actionText}>Update Dashboard</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -113,6 +123,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#212529',
   },
+  actionsSection: {
+    marginTop: 20,
+    padding: 10,
+  },
+  actionButton: {
+    backgroundColor: '#007bff',
+    padding: 15,
+    marginBottom: 10,
+    borderRadius: 10,
+  },
+  actionText: {
+    color: '#fff',
+    fontSize: 16,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
 });
 
-export default ClubDashboard;
+export default ClubProfileScreen;

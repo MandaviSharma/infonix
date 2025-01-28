@@ -4,7 +4,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, Switch } f
 const ProfileViewScreen = ({ navigation }) => {
   // Sample student profile data
   const student = {
-    name: 'John Doe',
+    name: 'Mandavi Sharma',
     contact: '123-456-7890',
     profilePic: 'https://via.placeholder.com/100',
     notificationsEnabled: true,
@@ -20,7 +20,7 @@ const ProfileViewScreen = ({ navigation }) => {
     <ScrollView style={styles.container}>
       {/* Profile Header */}
       <View style={styles.profileHeader}>
-        <Image source={{ uri: student.profilePic }} style={styles.profileImage} />
+
         <Text style={styles.profileName}>{student.name}</Text>
       </View>
 
@@ -67,19 +67,19 @@ const ProfileViewScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff', padding: 20 },
+  container: { flex: 1, backgroundColor: '#E3F2FD', padding: 20 },
   profileHeader: { alignItems: 'center', marginBottom: 20 },
   profileImage: { width: 100, height: 100, borderRadius: 50 },
-  profileName: { fontSize: 20, fontWeight: 'bold', marginTop: 10 },
-  section: { marginBottom: 20 },
-  sectionTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 10 },
-  infoText: { fontSize: 16, color: '#333', marginBottom: 5 },
-  eventItem: { flexDirection: 'row', justifyContent: 'space-between', padding: 10, backgroundColor: '#f8f8f8', borderRadius: 5, marginBottom: 5 },
-  eventName: { fontSize: 16 },
-  eventStatus: { fontSize: 14, fontStyle: 'italic' },
+  profileName: { fontSize: 20, fontWeight: 'bold', marginTop: 10, color: '#0D47A1' },
+  section: { marginBottom: 20, backgroundColor: '#BBDEFB', padding: 15, borderRadius: 10 },
+  sectionTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 10, color: '#0D47A1' },
+  infoText: { fontSize: 16, color: '#0D47A1', marginBottom: 5 },
+  eventItem: { flexDirection: 'row', justifyContent: 'space-between', padding: 10, backgroundColor: '#90CAF9', borderRadius: 5, marginBottom: 5 },
+  eventName: { fontSize: 16, color: '#0D47A1' },
+  eventStatus: { fontSize: 14, fontStyle: 'italic', color: '#0D47A1' },
   notificationRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  notificationText: { fontSize: 16 },
-  editButton: { backgroundColor: '#4CAF50', padding: 15, borderRadius: 5, alignItems: 'center' },
+  notificationText: { fontSize: 16, color: '#0D47A1' },
+  editButton: { backgroundColor: '#1976D2', padding: 15, borderRadius: 5, alignItems: 'center' },
   editButtonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
 });
 
