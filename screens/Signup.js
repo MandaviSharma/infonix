@@ -5,7 +5,6 @@ const Signup = ({ navigation }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [userType, setUserType] = useState('student');  // Defaulting to 'student'
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -16,20 +15,20 @@ const Signup = ({ navigation }) => {
       setError('Please fill in all fields');
       return;
     }
-    // Add further validation logic as required (e.g., email format check)
 
     setLoading(true);
 
     // Simulating a network request (e.g., signup)
     setTimeout(() => {
       setLoading(false);
-      // If signup successful, navigate
-      navigation.replace('MainApp', { userType });
+      navigation.replace('MainApp', { userType: 'student' }); // Defaulting to student
     }, 2000);
   };
 
   return (
     <View style={styles.container}>
+      <Text style={styles.header}>Student Signup</Text>
+
       <TextInput
         style={styles.input}
         placeholder="Full Name"
@@ -59,26 +58,6 @@ const Signup = ({ navigation }) => {
       {/* Display error message if any */}
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
-      {/* User Type Selection */}
-      <View style={styles.userTypeContainer}>
-        <Text style={styles.userTypeText}>I am signing up as a:</Text>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={[styles.userTypeButton, userType === 'student' && styles.selectedButton]}
-            onPress={() => setUserType('student')}
-          >
-            <Text style={styles.buttonText}>Student</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.userTypeButton, userType === 'club' && styles.selectedButton]}
-            onPress={() => setUserType('club')}
-          >
-            <Text style={styles.buttonText}>Club</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
       {/* Signup Button */}
       <TouchableOpacity style={styles.button} onPress={handleSignup} disabled={loading}>
         <Text style={styles.buttonText}>{loading ? 'Signing up...' : 'Sign Up'}</Text>
@@ -99,6 +78,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 20,
   },
+  header: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#007bff',
+  },
+  
   input: {
     width: '100%',
     padding: 15,
@@ -127,31 +113,6 @@ const styles = StyleSheet.create({
     color: '#007bff',
     marginTop: 15,
     fontSize: 16,
-  },
-  userTypeContainer: {
-    marginBottom: 20,
-    alignItems: 'center',
-  },
-  userTypeText: {
-    fontSize: 16,
-    color: '#212529',
-    marginBottom: 10,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-  },
-  userTypeButton: {
-    backgroundColor: '#ccc',
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 8,
-    width: '45%',
-    alignItems: 'center',
-  },
-  selectedButton: {
-    backgroundColor: '#007bff',
   },
   errorText: {
     color: 'red',

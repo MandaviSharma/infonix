@@ -18,16 +18,17 @@ const Login = ({ navigation }) => {
 
     setLoading(true);
 
-    // Simulate a network request for login
+    // Simulating a network request (e.g., login)
     setTimeout(() => {
       setLoading(false);
-      // After successful login, navigate to MainApp and pass the userType
       navigation.replace('MainApp', { userType });
     }, 2000);
   };
 
   return (
     <View style={styles.container}>
+      <Text style={styles.header}>Login</Text>
+
       <TextInput
         style={styles.input}
         placeholder="Email Address"
@@ -84,25 +85,31 @@ const Login = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa', // Light Gray Background
+    backgroundColor: '#f8f9fa',
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
+  },
+  header: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#007bff',
   },
   input: {
     width: '100%',
     padding: 15,
     borderWidth: 1,
-    borderColor: '#ccc', // Subtle Gray Border
+    borderColor: '#ccc',
     borderRadius: 8,
-    backgroundColor: '#ffffff', // White Input Fields
+    backgroundColor: '#ffffff',
     marginBottom: 15,
     fontSize: 16,
-    color: '#212529', // Dark Gray Text
+    color: '#212529',
   },
   button: {
     width: '100%',
-    backgroundColor: '#007bff', // Primary Blue
+    backgroundColor: '#007bff',
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
@@ -114,7 +121,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   linkText: {
-    color: '#007bff', // Primary Blue for Link
+    color: '#007bff',
     marginTop: 15,
     fontSize: 16,
   },

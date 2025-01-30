@@ -36,31 +36,31 @@ const AboutUs = ({ navigation }) => {
       {/* Mentors Section */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Our Mentors</Text>
-        <Text style={styles.sectionText}>1. Dr. John Doe - Senior Tech Expert</Text>
-        <Text style={styles.sectionText}>2. Prof. Jane Smith - Technology Educator</Text>
+        <Text style={styles.sectionText}></Text>
+        <Text style={styles.sectionText}></Text>
       </View>
 
       {/* Members Section */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Our Members</Text>
-        <Text style={styles.sectionText}>1. Alice Brown</Text>
-        <Text style={styles.sectionText}>2. Bob Green</Text>
-        <Text style={styles.sectionText}>3. Charlie White</Text>
-        <Text style={styles.sectionText}>4. David Black</Text>
+        <Text style={styles.sectionText}>n</Text>
+        <Text style={styles.sectionText}></Text>
+        <Text style={styles.sectionText}></Text>
+        <Text style={styles.sectionText}></Text>
       </View>
 
       {/* Club Events Section */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Upcoming Events</Text>
-        <Text style={styles.sectionText}>- Hackathon 2025: Innovating for a Better Future</Text>
-        <Text style={styles.sectionText}>- Tech Talk Series: The Future of AI</Text>
+        <Text style={styles.sectionText}>- </Text>
+        <Text style={styles.sectionText}>- </Text>
       </View>
 
       {/* Contact Information Section */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Contact Us</Text>
-        <Text style={styles.sectionText}>Email: contact@techclub.com</Text>
-        <Text style={styles.sectionText}>Phone: +1234567890</Text>
+        <Text style={styles.sectionText}>Email: </Text>
+        <Text style={styles.sectionText}>Phone: </Text>
       </View>
     </ScrollView>
   );

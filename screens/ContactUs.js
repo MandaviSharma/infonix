@@ -40,11 +40,11 @@ const ContactUs = ({ navigation }) => { // Accessing navigation prop here
           For any inquiries, you can reach us at:
         </Text>
         <Text style={styles.sectionText}>
-          <Text style={styles.boldText}>Email:</Text> contact@techclub.com
+          <Text style={styles.boldText}>Email:</Text>
         </Text>
         <TouchableOpacity onPress={handlePhoneCall}>
           <Text style={[styles.sectionText, styles.link]}>
-            <Text style={styles.boldText}>Phone:</Text> +1234567890
+            <Text style={styles.boldText}>Phone:</Text>
           </Text>
         </TouchableOpacity>
       </View>
@@ -67,21 +67,11 @@ const ContactUs = ({ navigation }) => { // Accessing navigation prop here
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Office Address</Text>
         <Text style={styles.sectionText}>
-          Tech Club Headquarters
-          {'\n'}123 Tech Lane, Innovation Park
-          {'\n'}City, Country, 12345
+
         </Text>
       </View>
 
-      {/* Operating Hours Section */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Operating Hours</Text>
-        <Text style={styles.sectionText}>
-          Monday - Friday: 9:00 AM - 6:00 PM
-        </Text>
-        <Text style={styles.sectionText}>Saturday: 10:00 AM - 2:00 PM</Text>
-        <Text style={styles.sectionText}>Sunday: Closed</Text>
-      </View>
+
     </ScrollView>
   );
 };

@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Switch
 
 const ProfileEditScreen = ({ navigation }) => {
   // State for editable student profile
-  const [name, setName] = useState('John Doe');
+  const [name, setName] = useState('Student Name');
   const [contact, setContact] = useState('123-456-7890');
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 

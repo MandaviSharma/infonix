@@ -5,7 +5,7 @@ const UpdateDashboard = ({ navigation }) => {
   const [clubName, setClubName] = useState('Tech Club');
   const [clubDescription, setClubDescription] = useState('Innovating the future with technology.');
   const [aboutUs, setAboutUs] = useState('This is the about us section.');
-  const [contactInfo, setContactInfo] = useState('contact@techclub.com');
+  const [contactInfo, setContactInfo] = useState('');
   const [posts, setPosts] = useState(['Post 1', 'Post 2', 'Post 3']);
 
   return (
