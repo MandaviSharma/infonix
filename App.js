@@ -2,6 +2,7 @@ import React from 'react';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import auth from '@react-native-firebase/auth';
 
 // Import Screens
 import HomeScreen from './screens/HomeScreen';
@@ -15,6 +16,7 @@ import ClubProfileScreen from './screens/ClubProfile';
 import UpdateDashboard from './screens/UpdateDashboard';
 import AboutUs from './screens/AboutUs';
 import ContactUs from './screens/ContactUs';
+import Splash from './screens/Splash';
 
 // Creating Stack and Drawer Navigators
 const Stack = createNativeStackNavigator();
@@ -78,6 +80,9 @@ function CustomDrawerContent(props) {
         label="Sign Out"
         labelStyle={{ color: '#000', fontWeight: 'bold' }}
         onPress={() => {
+          auth()
+            .signOut()
+            .then(() => console.log('User signed out!'));
           props.navigation.reset({ index: 0, routes: [{ name: 'Signup' }] });
         }}
       />
@@ -115,10 +120,12 @@ function DrawerNavigator({ route }) {
 // Main Stack Flow (Signup -> Main App)
 function MainStackFlow() {
   return (
-    <Stack.Navigator initialRouteName="Signup">
+    <Stack.Navigator initialRouteName="Splash">
       <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
       <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
       <Stack.Screen name="MainApp" component={DrawerNavigator} options={{ headerShown: false }} />
+      <Stack.Screen name="Splash" component={Splash} options={{ headerShown: false }} />
+    
     </Stack.Navigator>
   );
 }

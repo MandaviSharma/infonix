@@ -1,28 +1,42 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import auth from '@react-native-firebase/auth';
 
 const Signup = ({ navigation }) => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Handle Signup and Navigate to Home
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  // Create User Function
+  const createUser = async () => {
+    try {
+      await auth().createUserWithEmailAndPassword(email, password);
+      console.log('User account created & signed in!');
+      // Navigate to MainApp on successful signup
+      navigation.replace('MainApp', { userType: 'student' });
+    } catch (error) {
+      console.error(error);
+      if (error.code === 'auth/email-already-in-use') {
+        Alert.alert("Error", "That email address is already in use!");
+      } else if (error.code === 'auth/invalid-email') {
+        Alert.alert("Error", "That email address is invalid!");
+      } else {
+        Alert.alert("Error", "Signup failed. Please try again.");
+      }
+    }
+  };
+
+  // Handle Signup
   const handleSignup = () => {
     setError('');
-    if (!name || !email || !password) {
-      setError('Please fill in all fields');
-      return;
+    if (email !== '' && password !== '') {
+      setLoading(true);
+      createUser();
+    } else {
+      Alert.alert("Error", "Please enter all data.");
     }
-
-    setLoading(true);
-
-    // Simulating a network request (e.g., signup)
-    setTimeout(() => {
-      setLoading(false);
-      navigation.replace('MainApp', { userType: 'student' }); // Defaulting to student
-    }, 2000);
   };
 
   return (
@@ -31,28 +45,20 @@ const Signup = ({ navigation }) => {
 
       <TextInput
         style={styles.input}
-        placeholder="Full Name"
-        placeholderTextColor="#666"
-        value={name}
-        onChangeText={setName}
-      />
-
-      <TextInput
-        style={styles.input}
         placeholder="Email Address"
         placeholderTextColor="#666"
         keyboardType="email-address"
         value={email}
-        onChangeText={setEmail}
+        onChangeText={txt => setEmail(txt)}
       />
 
       <TextInput
         style={styles.input}
         placeholder="Password"
         placeholderTextColor="#666"
-        secureTextEntry
+        secureTextEntry={true}
         value={password}
-        onChangeText={setPassword}
+        onChangeText={txt => setPassword(txt)}
       />
 
       {/* Display error message if any */}
@@ -84,7 +90,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: '#007bff',
   },
-  
   input: {
     width: '100%',
     padding: 15,

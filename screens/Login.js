@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import  firestore from "@react-native-firebase/firestore";
+import uuid from "react-native-uuid";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import auth from '@react-native-firebase/auth';
+
+
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -8,22 +14,90 @@ const Login = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Handle Login and Navigate to Home
-  const handleLogin = () => {
-    setError('');
-    if (!email || !password) {
-      setError('Please enter both email and password');
-      return;
-    }
+  const signin_student=()=>{
+    // firestore()
+    //   .collection('Students')
+    //   .where('email','==',email)
+    //   .where('password','==',password)
+    //   .get()
+    //   .then(querySnapshot =>{
+    //     if(querySnapshot.docs.length === 0){
+    //       Alert.alert('Error','User Not Found');
+    //     }else{
+    //       //console.log(querySnapshot.docs[0]._data)
+    //       const userData = querySnapshot.docs[0].data();
+    //       if (userData.password===password){
+    //         saveData(userData.Club_name)
+    //         Alert.alert('Success','User Matched!')
+    //         navigation.navigate('MainApp', { userType });
+    //       }else{
+    //         Alert.alert('Error','Incorrect Password')
+    //       }
+    //     }
+          
+    //   }).catch(error=>{
+    //     console.log(error);
+    //   });
+     
+    //   const saveData= async (name)=>{
+    //     await AsyncStorage.setItem('EMAIL',email);
+    //     await AsyncStorage.setItem('NAME',name);
+    //    //await AsyncStorage.setItem('USERID',userId);
+    //     navigation.replace('MainApp', { userType });
+    //   }
+    auth()
+    .signInWithEmailAndPassword(email,password)
+    .then(()=>{
+      Alert.alert("success","User logged in");
+      navigation.navigate('MainApp', { userType });
+    }).catch(error=>{
+          console.log(error);
+         });
 
-    setLoading(true);
+         const saveData= async (name)=>{
+             await AsyncStorage.setItem('EMAIL',email);
+              await AsyncStorage.setItem('NAME',name);
+              navigation.replace('MainApp', { userType });
+  }};
 
-    // Simulating a network request (e.g., login)
-    setTimeout(() => {
-      setLoading(false);
+  const signin_club = () => {
+    firestore()
+      .collection('Clubs')
+      .where('Email', '==', email)
+      .where('Password', '==', password)
+      .get()
+      .then(querySnapshot => {
+        if (querySnapshot.docs.length === 0) {
+          Alert.alert('Error', 'User Not Found');
+        } else {
+          const userDoc = querySnapshot.docs[0]; // Get the first matching document
+          const userData = userDoc.data();
+          const docId = userDoc.id; // Get the document ID
+          console.log(docId)
+          if (userData.Password === password) {
+            saveData(userData.Club_name, docId);
+            Alert.alert('Success', 'User Matched!');
+            navigation.navigate('MainApp', { userType });
+          } else {
+            Alert.alert('Error', 'Incorrect Password');
+          }
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  
+    const saveData = async (name, userId) => {
+      await AsyncStorage.setItem('EMAIL', email);
+      await AsyncStorage.setItem('NAME', name);
+      await AsyncStorage.setItem('USERID', userId); // Save docId
       navigation.replace('MainApp', { userType });
-    }, 2000);
+    };
   };
+  
+
+
+  
 
   return (
     <View style={styles.container}>
@@ -35,7 +109,8 @@ const Login = ({ navigation }) => {
         placeholderTextColor="#666"
         keyboardType="email-address"
         value={email}
-        onChangeText={setEmail}
+        onChangeText={txt=>{setEmail(txt)}}
+
       />
 
       <TextInput
@@ -44,7 +119,7 @@ const Login = ({ navigation }) => {
         placeholderTextColor="#666"
         secureTextEntry
         value={password}
-        onChangeText={setPassword}
+        onChangeText={txt=>{setPassword(txt)}}
       />
 
       {/* Display error message if any */}
@@ -71,7 +146,15 @@ const Login = ({ navigation }) => {
       </View>
 
       {/* Login Button */}
-      <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
+      <TouchableOpacity style={styles.button} onPress={()=>{
+        if(userType=='student'){
+          signin_student()
+        }
+        else{
+          signin_club()
+        }
+      }
+      } disabled={loading}>
         <Text style={styles.buttonText}>{loading ? 'Logging in...' : 'Log In'}</Text>
       </TouchableOpacity>
 

@@ -39,16 +39,16 @@ const HomeScreen = ({ navigation }) => {
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <TouchableOpacity
             style={styles.clubButton}
-            onPress={() => navigation.navigate('ClubDashboard', { clubName: 'Club A' })}
+            onPress={() => navigation.navigate('ClubDashboard', { clubName: 'Algobyte' })}
           >
-            <Text style={styles.clubName}>Club A</Text>
+            <Text style={styles.clubName}>Algobyte</Text>
           </TouchableOpacity>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.clubButton}
             onPress={() => navigation.navigate('ClubDashboard', { clubName: 'Club B' })}
           >
             <Text style={styles.clubName}>Club B</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </ScrollView>
       </View>
 
@@ -146,3 +146,4 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen;
+

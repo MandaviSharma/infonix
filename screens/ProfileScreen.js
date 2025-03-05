@@ -1,52 +1,73 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, Switch } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, Alert } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import { getAuth, onAuthStateChanged } from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
-const ProfileViewScreen = ({ navigation }) => {
-  // Sample student profile data
-  const student = {
-    name: 'Student Name',
-    contact: '123-456-7890',
+const ProfileScreen = ({ navigation }) => {
+  const [profile, setProfile] = useState({
+    name: 'Your Name',
+    course: 'Not Set',
+    phoneNo: 'Not Set',
+    email: 'Not Set',
+    studentId: 'Not Set',
     profilePic: 'https://via.placeholder.com/100',
+  });
 
-    eventStats: { participated: 5, upcoming: 2 },
-    registeredEvents: [
+  const auth = getAuth();
 
-    ]
+  // Function to load profile data from Firestore
+  const loadProfileData = async (userId) => {
+    try {
+      const userDoc = await firestore().collection('Students').doc(userId).get();
+      if (userDoc.exists) {
+        setProfile({
+          name: userDoc.data().name || 'Your Name',
+          course: userDoc.data().course || 'Not Set',
+          phoneNo: userDoc.data().contact || 'Not Set',
+          email: userDoc.data().email || 'Not Set',
+          studentId: userDoc.data().studentID || 'Not Set',
+          profilePic: userDoc.data().profilePic || 'https://via.placeholder.com/100',
+        });
+      } else {
+        Alert.alert('Profile Not Found', 'No profile data available.');
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+      Alert.alert('Error', 'Failed to load profile.');
+    }
   };
+
+  // Listen for auth state and fetch user data
+  useFocusEffect(
+    useCallback(() => {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+          loadProfileData(user.uid);
+        } else {
+          Alert.alert('Error', 'User not logged in.');
+        }
+      });
+
+      return () => unsubscribe();
+    }, [])
+  );
 
   return (
     <ScrollView style={styles.container}>
-      {/* Profile Header */}
+      {/* Profile Image and Name */}
       <View style={styles.profileHeader}>
-
-        <Text style={styles.profileName}>{student.name}</Text>
+        <Image source={{ uri: profile.profilePic }} style={styles.profileImage} />
+        <Text style={styles.profileName}>{profile.name}</Text>
       </View>
 
       {/* Personal Details */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Personal Details</Text>
-        <Text style={styles.infoText}>Name: {student.name}</Text>
-        <Text style={styles.infoText}>Contact: {student.contact}</Text>
-      </View>
-
-      {/* Event Registrations */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Event Registrations</Text>
-        {student.registeredEvents.map(event => (
-          <View key={event.id} style={styles.eventItem}>
-            <Text style={styles.eventName}>{event.name}</Text>
-            <Text style={styles.eventStatus}>{event.status}</Text>
-          </View>
-        ))}
-      </View>
-
-
-
-      {/* Profile Analytics */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Participation History</Text>
-        <Text style={styles.infoText}>Participated Events: {student.eventStats.participated}</Text>
-        <Text style={styles.infoText}>Upcoming Events: {student.eventStats.upcoming}</Text>
+        <Text style={styles.infoText}>Course: {profile.course}</Text>
+        <Text style={styles.infoText}>Contact: {profile.phoneNo}</Text>
+        <Text style={styles.infoText}>Email: {profile.email}</Text>
+        <Text style={styles.infoText}>Student ID: {profile.studentId}</Text>
       </View>
 
       {/* Edit Profile Button */}
@@ -60,18 +81,13 @@ const ProfileViewScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#E3F2FD', padding: 20 },
   profileHeader: { alignItems: 'center', marginBottom: 20 },
-  profileImage: { width: 100, height: 100, borderRadius: 50 },
-  profileName: { fontSize: 20, fontWeight: 'bold', marginTop: 10, color: '#0D47A1' },
+  profileImage: { width: 120, height: 120, borderRadius: 60, borderWidth: 2, borderColor: '#1976D2' },
+  profileName: { fontSize: 22, fontWeight: 'bold', marginTop: 10, color: '#0D47A1' },
   section: { marginBottom: 20, backgroundColor: '#BBDEFB', padding: 15, borderRadius: 10 },
   sectionTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 10, color: '#0D47A1' },
   infoText: { fontSize: 16, color: '#0D47A1', marginBottom: 5 },
-  eventItem: { flexDirection: 'row', justifyContent: 'space-between', padding: 10, backgroundColor: '#90CAF9', borderRadius: 5, marginBottom: 5 },
-  eventName: { fontSize: 16, color: '#0D47A1' },
-  eventStatus: { fontSize: 14, fontStyle: 'italic', color: '#0D47A1' },
-  notificationRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  notificationText: { fontSize: 16, color: '#0D47A1' },
   editButton: { backgroundColor: '#1976D2', padding: 15, borderRadius: 5, alignItems: 'center' },
   editButtonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
 });
 
-export default ProfileViewScreen;
+export default ProfileScreen;
