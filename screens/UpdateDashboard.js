@@ -1,151 +1,11 @@
-// import React, { useState } from 'react';
-// import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-
-// const UpdateDashboard = ({ navigation }) => {
-//   const [clubName, setClubName] = useState('Tech Club');
-//   const [clubDescription, setClubDescription] = useState('');
-//   const [members, setMembers] = useState('');
-//   const [mentors, setMentors] = useState('');
-//   const [phoneNo, setPhoneNo] = useState('');
-//   const [email, setEmail] = useState('');
-//   const [instagram, setInstagram] = useState('');
-//   const [linkedin, setLinkedin] = useState('');
-//   const [posts, setPosts] = useState(['Post 1', 'Post 2', 'Post 3']);
-
-//   return (
-//     <ScrollView style={styles.container}>
-//       {/* Top Bar */}
-//       <View style={styles.topBar}>
-//         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backIconContainer}>
-//           <Text style={styles.backSymbol}>{'←'}</Text>
-//         </TouchableOpacity>
-//         <View style={styles.clubInfo}>
-//           <View style={styles.logoPlaceholder} />
-//           <Text style={styles.clubName}>{clubName}</Text>
-//         </View>
-//       </View>
-
-//       {/* About Us Section */}
-//       <View style={styles.section}>
-//         <Text style={styles.label}>Club Name</Text>
-//         <TextInput style={styles.input} value={clubName} onChangeText={setClubName} placeholder="Enter Club Name" />
-
-//         <Text style={styles.label}>Club Description</Text>
-//         <TextInput style={styles.input} value={clubDescription} onChangeText={setClubDescription} placeholder="Enter Club Description" multiline />
-
-//         <Text style={styles.label}>Members</Text>
-//         <TextInput style={styles.input} value={members} onChangeText={setMembers} placeholder="Enter Member Names" multiline />
-
-//         <Text style={styles.label}>Mentors</Text>
-//         <TextInput style={styles.input} value={mentors} onChangeText={setMentors} placeholder="Enter Mentor Names" multiline />
-//       </View>
-
-//       {/* Contact Info Section */}
-//       <View style={styles.section}>
-//         <Text style={styles.label}>Phone Number</Text>
-//         <TextInput style={styles.input} value={phoneNo} onChangeText={setPhoneNo} placeholder="Enter Phone Number" keyboardType="phone-pad" />
-
-//         <Text style={styles.label}>Email ID</Text>
-//         <TextInput style={styles.input} value={email} onChangeText={setEmail} placeholder="Enter Email ID" keyboardType="email-address" />
-
-//         <Text style={styles.label}>Instagram ID</Text>
-//         <TextInput style={styles.input} value={instagram} onChangeText={setInstagram} placeholder="Enter Instagram ID" />
-
-//         <Text style={styles.label}>LinkedIn ID</Text>
-//         <TextInput style={styles.input} value={linkedin} onChangeText={setLinkedin} placeholder="Enter LinkedIn ID" />
-//       </View>
-
-//       {/* Existing Posts */}
-//       <View style={styles.section}>
-//         <Text style={styles.label}>Existing Posts</Text>
-//         {posts.map((post, index) => (
-//           <View key={index} style={styles.post}>
-//             <Text style={styles.postText}>{post}</Text>
-//             <View style={styles.postActions}>
-//               <TouchableOpacity style={styles.actionButton}>
-//                 <Text style={styles.actionButtonText}>Edit</Text>
-//               </TouchableOpacity>
-//               <TouchableOpacity style={styles.actionButton}>
-//                 <Text style={styles.actionButtonText}>Delete</Text>
-//               </TouchableOpacity>
-//             </View>
-//           </View>
-//         ))}
-//       </View>
-
-//       {/* Update Button */}
-//       <TouchableOpacity style={styles.button}>
-//         <Text style={styles.buttonText}>Update</Text>
-//       </TouchableOpacity>
-//     </ScrollView>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: { flex: 1, backgroundColor: '#f8f9fa', padding: 15 },
-//   topBar: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     padding: 15,
-//     backgroundColor: '#007bff',
-//     borderBottomLeftRadius: 25,
-//     borderBottomRightRadius: 25,
-//     elevation: 3,
-//   },
-//   backIconContainer: { marginRight: 15 },
-//   backSymbol: { fontSize: 24, color: '#fff' },
-//   clubInfo: { flexDirection: 'row', alignItems: 'center', flex: 1 },
-//   logoPlaceholder: { width: 40, height: 40, backgroundColor: '#fff', borderRadius: 50, marginRight: 10 },
-//   clubName: { fontSize: 18, fontWeight: 'bold', color: '#fff' },
-//   section: { marginBottom: 25 },
-//   label: { fontSize: 16, fontWeight: 'bold', color: '#212529', marginBottom: 8 },
-//   input: {
-//     backgroundColor: '#fff',
-//     padding: 12,
-//     borderRadius: 8,
-//     borderWidth: 1,
-//     borderColor: '#ddd',
-//     marginBottom: 15,
-//     fontSize: 14,
-//   },
-//   button: {
-//     backgroundColor: '#007bff',
-//     padding: 15,
-//     borderRadius: 8,
-//     alignItems: 'center',
-//     marginTop: 20,
-//   },
-//   buttonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
-//   post: {
-//     backgroundColor: '#fff',
-//     padding: 15,
-//     borderRadius: 8,
-//     borderWidth: 1,
-//     borderColor: '#ddd',
-//     marginTop: 10,
-//   },
-//   postText: { fontSize: 14, color: '#212529' },
-//   postActions: { flexDirection: 'row', marginTop: 10 },
-//   actionButton: {
-//     backgroundColor: '#007bff',
-//     paddingVertical: 6,
-//     paddingHorizontal: 12,
-//     borderRadius: 6,
-//     marginRight: 8,
-//   },
-//   actionButtonText: { color: '#fff', fontSize: 14 },
-// });
-
-// export default UpdateDashboard;
-
-
-
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 
-const UpdateDashboard = ({ navigation }) => {
-  const [clubID, setClubID] = useState(null);
+const UpdateDashboard = ({ navigation, route}) => {
+  const { userType, userId } = route.params; 
+
+  
   const [clubName, setClubName] = useState('Tech Club');
   const [clubDescription, setClubDescription] = useState('');
   const [members, setMembers] = useState('');
@@ -155,29 +15,12 @@ const UpdateDashboard = ({ navigation }) => {
   const [instagram, setInstagram] = useState('');
   const [linkedin, setLinkedin] = useState('');
   const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    // Fetch Club ID from Firestore
-    const fetchClubID = async () => {
-      try {
-        const clubSnapshot = await firestore().collection('Clubs').where('Email', '==', email).get();
-        if (!clubSnapshot.empty) {
-          const clubData = clubSnapshot.docs[0];
-          setClubID(clubData.id);
-          fetchClubDetails(clubData.id);
-        }
-      } catch (error) {
-        console.error('Error fetching club ID:', error);
-      }
-    };
-
-    fetchClubID();
-  }, []);
-
+  
+  
   // Fetch Club Details
-  const fetchClubDetails = async (id) => {
+  const fetchClubDetails = async (userId) => {
     try {
-      const doc = await firestore().collection('Clubs').doc(id).get();
+      const doc = await firestore().collection('Clubs').doc(userId).get();
       if (doc.exists) {
         const data = doc.data();
         setClubDescription(data.description || '');
@@ -196,13 +39,13 @@ const UpdateDashboard = ({ navigation }) => {
 
   // Update Club Details
   const updateClubDetails = async () => {
-    if (!clubID) {
+    if (!userId) {
       Alert.alert('Error', 'Club ID not found!');
       return;
     }
 
     try {
-      await firestore().collection('Clubs').doc(clubID).update({
+      await firestore().collection('Clubs').doc(userId).update({
         name: clubName,
         description: clubDescription,
         members,

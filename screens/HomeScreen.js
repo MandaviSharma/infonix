@@ -1,7 +1,65 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator, Image } from 'react-native';
+import firestore from '@react-native-firebase/firestore';
 
 const HomeScreen = ({ navigation }) => {
+  const [noticesc, setNoticesc] = useState([]);
+  const [noticesd, setNoticesd] = useState([]);
+  const [loadingc, setLoadingc] = useState(true);
+  const [loadingd, setLoadingd] = useState(true);
+    
+  useEffect(() => {
+    const unsubscribeNotices = firestore()
+      .collection('notice')
+      .where('userType', '==', 'club')
+      .orderBy('timestamp', 'desc')
+      .onSnapshot(
+        snapshot => {
+          if (!snapshot.empty) {
+            const fetchedNoticesc = snapshot.docs.map(doc => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+            setNoticesc(fetchedNoticesc);
+          } else {
+            setNoticesc([]);
+          }
+          setLoadingc(false);
+        },
+        error => {
+          console.error('Error fetching club notices:', error);
+          setLoadingc(false);
+        }
+      );
+  
+    const unsubscribeNoticesdept = firestore()
+      .collection('notice')
+      .where('userType', '==', 'department')
+      .orderBy('timestamp', 'desc')
+      .onSnapshot(
+        snapshot => {
+          if (!snapshot.empty) {
+            const fetchedNoticesd = snapshot.docs.map(doc => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+            setNoticesd(fetchedNoticesd);
+          } else {
+            setNoticesd([]);
+          }
+          setLoadingd(false);
+        },
+        error => {
+          console.error('Error fetching department notices:', error);
+          setLoadingd(false);
+        }
+      );
+  
+    return () => {
+      unsubscribeNotices();
+      unsubscribeNoticesdept();
+    };
+  }, []);
   return (
     <ScrollView style={styles.container}>
       {/* Top Bar */}
@@ -17,19 +75,51 @@ const HomeScreen = ({ navigation }) => {
 
       {/* Notices Carousel */}
       <View style={styles.carousel}>
-        <Text style={styles.carouselTitle}>Latest Official Notices</Text>
+        <Text style={styles.carouselTitle}>Recent Club Notices</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <View style={styles.notice}><Text style={styles.noticeText}>Notice 1</Text></View>
-          <View style={styles.notice}><Text style={styles.noticeText}>Notice 2</Text></View>
-          <View style={styles.notice}><Text style={styles.noticeText}>Notice 3</Text></View>
+          {loadingc ? (
+                    <ActivityIndicator size="large" color="#007bff" />
+                  ) : noticesc.length > 0 ? (
+                    noticesc.map(notice => (
+                      <View key={notice.id} style={[styles.card, styles.cardElevated]}>
+                        <Image 
+                          source={{ uri: notice.imageUrl || 'https://via.placeholder.com/380' }} 
+                          style={styles.cardImage} 
+                        />
+                        <View>
+                          <Text style={styles.cardTitle}>{notice.category}</Text>
+                          {/* <Text style={styles.cardLabel}>{new Date(notice.timestamp.toDate()).toLocaleString()}</Text> */}
+                          <Text style={styles.cardDescription}>{notice.description}</Text>
+                        </View>
+                      </View>
+                    ))
+                  ) : (
+                    <Text style={styles.noNoticesText}>No notices available.</Text>
+                  )}
         </ScrollView>
       </View>
       <View style={styles.carousel}>
-        <Text style={styles.carouselTitle}>Latest Club Notices</Text>
+        <Text style={styles.carouselTitle}>Recent Official Notices</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <View style={styles.notice}><Text style={styles.noticeText}>Notice 1</Text></View>
-          <View style={styles.notice}><Text style={styles.noticeText}>Notice 2</Text></View>
-          <View style={styles.notice}><Text style={styles.noticeText}>Notice 3</Text></View>
+          {loadingd ? (
+                    <ActivityIndicator size="large" color="#007bff" />
+                  ) : noticesd.length > 0 ? (
+                    noticesd.map(notice => (
+                      <View key={notice.id} style={[styles.card, styles.cardElevated]}>
+                        <Image 
+                          source={{ uri: notice.imageUrl || 'https://via.placeholder.com/380' }} 
+                          style={styles.cardImage} 
+                        />
+                        <View>
+                          <Text style={styles.cardTitle}>{notice.category}</Text>
+                          {/* <Text style={styles.cardLabel}>{new Date(notice.timestamp.toDate()).toLocaleString()}</Text> */}
+                          <Text style={styles.cardDescription}>{notice.description}</Text>
+                        </View>
+                      </View>
+                    ))
+                  ) : (
+                    <Text style={styles.noNoticesText}>No notices available.</Text>
+                  )}
         </ScrollView>
       </View>
 
@@ -67,6 +157,8 @@ const HomeScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </View>
+      
+  
     </ScrollView>
   );
 };
@@ -143,6 +235,43 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   categoryText: { color: '#fff', textAlign: 'center', fontSize: 16 },
+  card: {
+    width: 360,
+    borderRadius: 6,
+    marginVertical: 12,
+    marginHorizontal: 16,
+    backgroundColor:'#FFggFF',
+  },
+  cardElevated: {
+    backgroundColor: '#b0e0e6',
+    elevation: 3,
+    shadowOffset: { width: 5, height: 1 },
+  },
+  cardImage: {
+    height: 220,
+    marginBottom: 8,
+    borderTopLeftRadius: 6,
+    borderTopRightRadius: 6,
+  },
+  cardTitle: {
+    color: '#000000',
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 6,
+    marginLeft: 130,
+  },
+  cardLabel: {
+    color: '#000000',
+    fontSize: 14,
+    marginBottom: 6,
+  },
+  cardDescription: {
+    color: '#758283',
+    fontSize: 12,
+    marginBottom: 12,
+    marginTop: 6,
+    flexShrink: 1,
+  },
 });
 
 export default HomeScreen;

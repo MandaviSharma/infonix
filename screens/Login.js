@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import  firestore from "@react-native-firebase/firestore";
-import uuid from "react-native-uuid";
+import firestore from "@react-native-firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import auth from '@react-native-firebase/auth';
-
-
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -14,51 +11,17 @@ const Login = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const signin_student=()=>{
-    // firestore()
-    //   .collection('Students')
-    //   .where('email','==',email)
-    //   .where('password','==',password)
-    //   .get()
-    //   .then(querySnapshot =>{
-    //     if(querySnapshot.docs.length === 0){
-    //       Alert.alert('Error','User Not Found');
-    //     }else{
-    //       //console.log(querySnapshot.docs[0]._data)
-    //       const userData = querySnapshot.docs[0].data();
-    //       if (userData.password===password){
-    //         saveData(userData.Club_name)
-    //         Alert.alert('Success','User Matched!')
-    //         navigation.navigate('MainApp', { userType });
-    //       }else{
-    //         Alert.alert('Error','Incorrect Password')
-    //       }
-    //     }
-          
-    //   }).catch(error=>{
-    //     console.log(error);
-    //   });
-     
-    //   const saveData= async (name)=>{
-    //     await AsyncStorage.setItem('EMAIL',email);
-    //     await AsyncStorage.setItem('NAME',name);
-    //    //await AsyncStorage.setItem('USERID',userId);
-    //     navigation.replace('MainApp', { userType });
-    //   }
+  const signin_student = () => {
     auth()
-    .signInWithEmailAndPassword(email,password)
-    .then(()=>{
-      Alert.alert("success","User logged in");
-      navigation.navigate('MainApp', { userType });
-    }).catch(error=>{
-          console.log(error);
-         });
-
-         const saveData= async (name)=>{
-             await AsyncStorage.setItem('EMAIL',email);
-              await AsyncStorage.setItem('NAME',name);
-              navigation.replace('MainApp', { userType });
-  }};
+      .signInWithEmailAndPassword(email, password)
+      .then(() => {
+        Alert.alert("Success", "Student logged in");
+        saveData('Student');
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
 
   const signin_club = () => {
     firestore()
@@ -68,36 +31,54 @@ const Login = ({ navigation }) => {
       .get()
       .then(querySnapshot => {
         if (querySnapshot.docs.length === 0) {
-          Alert.alert('Error', 'User Not Found');
+          Alert.alert('Error', 'Club not found');
         } else {
-          const userDoc = querySnapshot.docs[0]; // Get the first matching document
+          const userDoc = querySnapshot.docs[0];
           const userData = userDoc.data();
-          const docId = userDoc.id; // Get the document ID
-          console.log(docId)
+          const docId = userDoc.id;
           if (userData.Password === password) {
             saveData(userData.Club_name, docId);
-            Alert.alert('Success', 'User Matched!');
-            navigation.navigate('MainApp', { userType });
+            Alert.alert('Success', 'Club logged in');
           } else {
             Alert.alert('Error', 'Incorrect Password');
           }
         }
       })
-      .catch(error => {
-        console.log(error);
-      });
-  
-    const saveData = async (name, userId) => {
-      await AsyncStorage.setItem('EMAIL', email);
-      await AsyncStorage.setItem('NAME', name);
-      await AsyncStorage.setItem('USERID', userId); // Save docId
-      navigation.replace('MainApp', { userType });
-    };
+      .catch(error => console.log(error));
   };
-  
 
+  const signin_department = () => {
+    firestore()
+      .collection('Department')
+      .where('email', '==', email)
+      .where('password', '==', password)
+      .get()
+      .then(querySnapshot => {
+        if (querySnapshot.docs.length === 0) {
+          Alert.alert('Error', 'Department not found');
+        } else {
+          const userDoc = querySnapshot.docs[0];
+          const userData = userDoc.data();
+          const docId = userDoc.id;
+          if (userData.password === password) {
+            saveData(userData.Department_name, docId);
+            Alert.alert('Success', 'Department logged in');
+          } else {
+            Alert.alert('Error', 'Incorrect Password');
+          }
+        }
+      })
+      .catch(error => console.log(error));
+  };
 
-  
+  const saveData = async (name, userId = '') => {
+    await AsyncStorage.setItem('EMAIL', email);
+    await AsyncStorage.setItem('NAME', name);
+    if (userId) {
+      await AsyncStorage.setItem('USERID', userId);
+    }
+    navigation.replace('MainApp', { userType,userId,name });
+  };
 
   return (
     <View style={styles.container}>
@@ -109,8 +90,7 @@ const Login = ({ navigation }) => {
         placeholderTextColor="#666"
         keyboardType="email-address"
         value={email}
-        onChangeText={txt=>{setEmail(txt)}}
-
+        onChangeText={setEmail}
       />
 
       <TextInput
@@ -119,13 +99,11 @@ const Login = ({ navigation }) => {
         placeholderTextColor="#666"
         secureTextEntry
         value={password}
-        onChangeText={txt=>{setPassword(txt)}}
+        onChangeText={setPassword}
       />
 
-      {/* Display error message if any */}
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
-      {/* User Type Selection */}
       <View style={styles.userTypeContainer}>
         <Text style={styles.userTypeText}>I am logging in as a:</Text>
         <View style={styles.buttonContainer}>
@@ -142,19 +120,25 @@ const Login = ({ navigation }) => {
           >
             <Text style={styles.buttonText}>Club</Text>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.userTypeButton, userType === 'department' && styles.selectedButton]}
+            onPress={() => setUserType('department')}
+          >
+            <Text style={styles.buttonText}>Dept</Text>
+          </TouchableOpacity>
         </View>
       </View>
 
-      {/* Login Button */}
-      <TouchableOpacity style={styles.button} onPress={()=>{
-        if(userType=='student'){
-          signin_student()
-        }
-        else{
-          signin_club()
-        }
-      }
-      } disabled={loading}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+          if (userType === 'student') signin_student();
+          else if (userType === 'club') signin_club();
+          else signin_department();
+        }}
+        disabled={loading}
+      >
         <Text style={styles.buttonText}>{loading ? 'Logging in...' : 'Log In'}</Text>
       </TouchableOpacity>
 
@@ -219,7 +203,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     width: '100%',
   },
   userTypeButton: {
@@ -227,7 +211,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 8,
-    width: '45%',
+    width: '30%',
     alignItems: 'center',
   },
   selectedButton: {
@@ -240,3 +224,4 @@ const styles = StyleSheet.create({
 });
 
 export default Login;
+
