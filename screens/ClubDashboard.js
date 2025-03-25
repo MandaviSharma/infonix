@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
@@ -83,8 +82,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     backgroundColor: '#007bff',
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
   },
   logoPlaceholder: {
     width: 50,

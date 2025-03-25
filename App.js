@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
@@ -15,6 +14,8 @@ import Login from './screens/Login';
 import ClubDashboard from './screens/ClubDashboard';
 import ClubProfileScreen from './screens/ClubProfile';
 import UpdateDashboard from './screens/UpdateDashboard';
+import Results from './screens/Results';
+import ViewResult from './screens/ViewResult';
 import AboutUs from './screens/AboutUs';
 import ContactUs from './screens/ContactUs';
 import Splash from './screens/Splash';
@@ -44,6 +45,7 @@ function MainStack() {
       <Stack.Screen name="ClubDashboard" component={ClubDashboard} options={{ headerShown: false }} />
       <Stack.Screen name="ContactUs" component={ContactUs} options={{ headerShown: false }} />
       <Stack.Screen name="AboutUs" component={AboutUs} options={{ headerShown: false }} />
+      <Stack.Screen name="ViewResult" component={ViewResult} options={{ headerShown: false }} />
       <Stack.Screen name="CategoryNoticesScreen" component={CategoryNoticesScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
@@ -63,9 +65,11 @@ function ClubStack({ route, navigation }) {
     <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: '#007BFF' }, headerTintColor: '#FFF' }}>
       <Stack.Screen name="ClubProfile" component={ClubProfileScreen} options={{ headerShown: false  }} initialParams={route.params} />
       <Stack.Screen name="AddNotice" component={AddNotice} options={{ headerShown: false }} initialParams={route.params}/>
+      <Stack.Screen name="Results" component={Results} options={{ headerShown: false }} initialParams={route.params}/>
       <Stack.Screen name="UpdateDashboard" component={UpdateDashboard} options={{ headerShown: false }} initialParams={route.params} />
       <Stack.Screen name="AboutUs" component={AboutUs} options={{ headerShown: false }} initialParams={route.params} />
       <Stack.Screen name="ContactUs" component={ContactUs} options={{ headerShown: false }} initialParams={route.params} />
+      <Stack.Screen name="ViewResult" component={ViewResult} options={{ headerShown: false }} initialParams={route.params} />
     </Stack.Navigator>
   );
 }
@@ -75,7 +79,6 @@ function DeptStack({ route, navigation }) {
     <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: '#007BFF' }, headerTintColor: '#FFF' }}>
       <Stack.Screen name="DeptProfile" component={DeptProfileScreen} options={{ headerShown: false }} />
       <Stack.Screen name="AddNotice" component={AddNotice} options={{ headerShown: false }} initialParams={route.params} />
-      
     </Stack.Navigator>
   );
 }

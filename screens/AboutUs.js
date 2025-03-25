@@ -111,9 +111,7 @@ const styles = StyleSheet.create({
   topBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1565C0', // Deep blue
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    backgroundColor: '#1565C0', 
     marginBottom:25,
     paddingVertical: 12,
     paddingHorizontal: 16,

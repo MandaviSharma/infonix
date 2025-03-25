@@ -160,8 +160,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 15,
     backgroundColor: '#007bff',
-    borderBottomLeftRadius: 25,
-    borderBottomRightRadius: 25,
     elevation: 3,
   },
   backIconContainer: { marginRight: 15 },

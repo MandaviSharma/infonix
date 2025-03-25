@@ -1,9 +1,6 @@
-
-
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator, Image } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-
 const ClubProfile = ({ navigation,route }) => {
   const [notices, setNotices] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -77,6 +74,9 @@ const ClubProfile = ({ navigation,route }) => {
         <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('ContactUs')}>
           <Text style={styles.navText}>Contact Us</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('ViewResult')}>
+          <Text style={styles.navText}>Results</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Notices Section */}
@@ -112,6 +112,9 @@ const ClubProfile = ({ navigation,route }) => {
         <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('UpdateDashboard')}>
           <Text style={styles.actionText}>Update Dashboard</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('Results')}>
+          <Text style={styles.actionText}>Announce Result</Text>
+        </TouchableOpacity>
       </View> 
     </ScrollView>
   );
@@ -127,8 +130,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     backgroundColor: '#007bff',
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+
   },
   logoPlaceholder: {
     width: 50,
