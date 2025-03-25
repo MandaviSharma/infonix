@@ -1,10 +1,8 @@
-
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { launchImageLibrary } from 'react-native-image-picker';
 import firestore from '@react-native-firebase/firestore';
-import storage from '@react-native-firebase/storage';
 
 const AddNotice = ({ navigation, route }) => {
   const { userType, userId } = route.params; // Get userType and userId from navigation params
@@ -46,35 +44,7 @@ const AddNotice = ({ navigation, route }) => {
     setLoading(true);
 
     try {
-      // Upload image to Firebase Storage
-      // const fileName = noticeImage.split('/').pop();
-      // const reference = storage().ref(`notices/${fileName}`);
-      // await reference.putFile(noticeImage);
 
-      // // Get download URL
-      // const imageUrl = await reference.getDownloadURL();
-
-      // Save notice details in Firestore
-      
-      
-    //   await firestore().collection('notice').add({
-    //     category,
-    //     description,
-    //     imageUrl:noticeImage, // Directly storing the image URI
-    //     //timestamp: firestore.FieldValue.serverTimestamp(),
-    //     timestamp: firestore.FieldValue.serverTimestamp(),
-    //     userId,
-    //     userType
-    //   });
-
-    //   setLoading(false);
-    //   Alert.alert('Success', 'Notice posted successfully!', [
-    //     { text: 'OK', onPress: () => navigation.goBack() },
-    //   ]);
-    // } catch (error) {
-    //   setLoading(false);
-    //   console.error('Error posting notice:', error);
-    //   Alert.alert('Error', 'Failed to post notice. Please try again.');
     let collectionName = userType === "club" ? "Clubs" : "Department";
     let nameField = userType === "club" ? "Club_name" : "Department_name";
 
@@ -126,9 +96,11 @@ const AddNotice = ({ navigation, route }) => {
           style={styles.picker}
         >
           <Picker.Item label="Select Category" value="" />
-          <Picker.Item label="Event" value="Event" />
-          <Picker.Item label="Announcement" value="Announcement" />
-          <Picker.Item label="Meeting" value="Meeting" />
+          <Picker.Item label="Sports" value="Sports" />
+          <Picker.Item label="Academics" value="Academics" />
+          <Picker.Item label="Cultural" value="Cultural" />
+          <Picker.Item label="Literature" value="Literature" />
+          <Picker.Item label="Technical" value="Technical" />
           <Picker.Item label="Others" value="Others" />
         </Picker>
       </View>

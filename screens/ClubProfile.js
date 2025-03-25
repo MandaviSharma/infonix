@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator, Image } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 
-const ClubDashboard = ({ navigation,route }) => {
+const ClubProfile = ({ navigation,route }) => {
   const [notices, setNotices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [clubName, setClubName] = useState('');
@@ -233,5 +233,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ClubDashboard;
+export default ClubProfile;
 

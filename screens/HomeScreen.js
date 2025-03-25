@@ -8,6 +8,8 @@ const HomeScreen = ({ navigation }) => {
   const [loadingc, setLoadingc] = useState(true);
   const [loadingd, setLoadingd] = useState(true);
     
+  const categories = ['Sports', 'Academics', 'Cultural', 'Technical', 'Others'];
+
   useEffect(() => {
     const unsubscribeNotices = firestore()
       .collection('notice')
@@ -144,20 +146,20 @@ const HomeScreen = ({ navigation }) => {
 
       {/* Categories Section */}
       <View style={styles.categoriesSection}>
-        <Text style={styles.sectionTitle}>Categories</Text>
-        <View style={styles.categoriesRow}>
-          <TouchableOpacity style={styles.categoryButton}>
-            <Text style={styles.categoryText}>Sports</Text>
+      <Text style={styles.sectionTitle}>Categories</Text>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        {categories.map(category => (
+          <TouchableOpacity 
+            key={category} 
+            style={styles.clubButton} 
+            onPress={() => navigation.navigate('CategoryNoticesScreen', { category })}
+          >
+            <Text style={styles.categoryText}>{category}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.categoryButton}>
-            <Text style={styles.categoryText}>Academics</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.categoryButton}>
-            <Text style={styles.categoryText}>Literature</Text>
-          </TouchableOpacity>
-        </View>
+        ))}
+    
+      </ScrollView>
       </View>
-      
   
     </ScrollView>
   );
@@ -271,6 +273,24 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     marginTop: 6,
     flexShrink: 1,
+  },
+  categoriesContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+  },
+  categoryButton: {
+    backgroundColor: '#007bff',
+    padding: 15,
+    margin: 8,
+    borderRadius: 6,
+    alignItems: 'center',
+    width: '45%',
+  },
+  categoryText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
