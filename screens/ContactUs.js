@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Linking, Image, ActivityIndicator } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-
+import club_logo from '../assets/club_logo.jpg';
 const ContactUs = ({ navigation, route }) => {
   const [clubData, setClubData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -42,7 +42,7 @@ const ContactUs = ({ navigation, route }) => {
           <Text style={styles.backSymbol}>{'←'}</Text>
         </TouchableOpacity>
         <View style={styles.clubInfo}>
-          <Image source={{ uri: clubData?.logoUrl || 'https://via.placeholder.com/40' }} style={styles.clubLogo} />
+          <Image source={club_logo} style={styles.logoImage} />
           <View style={styles.clubDetails}>
             <Text style={styles.clubName}>{clubData?.Club_name || 'Club Name'}</Text>
           </View>
@@ -51,14 +51,14 @@ const ContactUs = ({ navigation, route }) => {
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Contact Information</Text>
-        <Text style={styles.sectionText}>Email: {clubData?.Email || 'Not provided'}</Text>
-        <Text style={styles.sectionText}>Phone: {clubData?.phoneNo || 'Not provided'}</Text>
+        <Text style={styles.sectionText}>Email: {clubData?.Email || 'algobyte@gmail.com'}</Text>
+        <Text style={styles.sectionText}>Phone: {clubData?.phoneNo || '1234567890'}</Text>
       </View>
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Follow Us</Text>
         {clubData?.instagram && (
-          <Text style={styles.linkText} onPress={() => Linking.openURL(clubData.instagram)}>
+          <Text style={styles.linkText} onPress={() => Linking.openURL(clubData.instagram ||'https://www.instagram.com/algobyte.bv?igsh=YnBtbTdpanNpMDE=')}>
             Instagram
           </Text>
         )}
@@ -105,6 +105,12 @@ const styles = StyleSheet.create({
   },
   clubDetails: { flex: 1 },
   clubName: { fontSize: 20, fontWeight: 'bold', color: '#E3F2FD' },
+  logoImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
+  },
   section: {
     marginBottom: 25,
     paddingHorizontal: 18,

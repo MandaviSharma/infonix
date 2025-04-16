@@ -1,26 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, Linking, ActivityIndicator } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import club_logo from '../assets/club_logo.jpg';
-const AboutUs = ({ navigation, route }) => {
-  const [clubData, setClubData] = useState(null);
+import dept_logo from '../assets/dept_logo.jpg';
+
+const AboutUsDept = ({ navigation, route }) => {
+  const [deptData, setDeptData] = useState(null);
   const [loading, setLoading] = useState(true);
   const { userId } = route.params;
 
   useEffect(() => {
     const unsubscribe = firestore()
-      .collection('Clubs')
+      .collection('Department')  // Fetching from Departments collection
       .doc(userId)
       .onSnapshot(snapshot => {
         if (snapshot.exists) {
-          setClubData(snapshot.data());
+          setDeptData(snapshot.data());
         } else {
-          console.log('No such document!');
-          setClubData(null);
+          console.log('No such department found!');
+          setDeptData(null);
         }
         setLoading(false);
       }, error => {
-        console.error('Error fetching club details:', error);
+        console.error('Error fetching department details:', error);
         setLoading(false);
       });
 
@@ -42,11 +43,11 @@ const AboutUs = ({ navigation, route }) => {
         <TouchableOpacity style={styles.backIconContainer} onPress={() => navigation.goBack()}>
           <Text style={styles.backSymbol}>{'←'}</Text>
         </TouchableOpacity>
-        <View style={styles.clubInfo}>
-          <Image source={club_logo} style={styles.logoImage} />
-          <View style={styles.clubDetails}>
-            <Text style={styles.clubName}>About {clubData?.Club_name || 'Club Name'}</Text>
-            <Text style={styles.clubDescription}>{clubData?.description || 'Club Description'}</Text>
+        <View style={styles.deptInfo}>
+          <Image source={dept_logo} style={styles.logoImage} />
+          <View style={styles.deptDetails}>
+            <Text style={styles.deptName}>About {deptData?.Department_name || 'Aim and Act'}</Text>
+            <Text style={styles.deptDescription}>{deptData?.description || 'department of Computer Science'}</Text>
           </View>
         </View>
       </View>
@@ -54,45 +55,47 @@ const AboutUs = ({ navigation, route }) => {
       {/* About Us Section */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>About Us</Text>
-        <Text style={styles.sectionText}>{clubData?.description || 'No description available.'}</Text>
+        <Text style={styles.sectionText}>{deptData?.description || 'department of Computer Science'}</Text>
       </View>
 
-      {/* Mentors Section */}
+      {/* Head of Department (HOD) */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Our Mentors</Text>
-        <Text style={styles.sectionText}>{clubData?.mentors || 'No mentors listed.'}</Text>
+        <Text style={styles.sectionTitle}>Head of Department (HOD)</Text>
+        <Text style={styles.sectionText}>{deptData?.HOD || 'Dr. Rajiv Singh'}</Text>
       </View>
 
-      {/* Members Section */}
+      {/* Dean Section */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Our Members</Text>
-        <Text style={styles.sectionText}>{clubData?.members || 'No members listed.'}</Text>
+        <Text style={styles.sectionTitle}>Dean</Text>
+        <Text style={styles.sectionText}>{deptData?.Dean || 'Mr. C.K Jha'}</Text>
       </View>
 
-      {/* Contact Information Section */}
+      {/* Faculty Members */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Faculty Members</Text>
+        <Text style={styles.sectionText}>{deptData?.members? `${deptData.members} Faculty Members` : '50'}</Text>
+      </View>
+
+      {/* Contact Information */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Contact Us</Text>
-        <Text style={styles.sectionText}>Email: {clubData?.Email || 'Not provided'}</Text>
-        <Text style={styles.sectionText}>Phone: {clubData?.phoneNo || 'Not provided'}</Text>
+        <Text style={styles.sectionText}>Email: {deptData?.email || 'apaji@gmail.com'}</Text>
+        <Text style={styles.sectionText}>Phone: {deptData?.phoneNo || 'Not provided'}</Text>
       </View>
 
       {/* Social Links */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Follow Us</Text>
-        {clubData?.instagram && (
-          <Text style={styles.linkText} onPress={() => Linking.openURL(clubData.instagram)}>
-            Instagram
-          </Text>
-        )}
-        {clubData?.linkedin && (
-          <Text style={styles.linkText} onPress={() => Linking.openURL(clubData.linkedin)}>
-            LinkedIn
+        {deptData?.website && (
+          <Text style={styles.linkText} onPress={() => Linking.openURL(deptData.website)}>
+            Official Website
           </Text>
         )}
       </View>
     </ScrollView>
   );
 };
+
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#E3F2FD', padding: 0 },
 
@@ -104,12 +107,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#E3F2FD',
   },
 
-  // Top Bar Styles
+  // Top Bar
   topBar: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#1565C0',
-    marginBottom:25,
+    marginBottom: 25,
     paddingVertical: 12,
     paddingHorizontal: 16,
     shadowColor: '#000',
@@ -121,24 +124,18 @@ const styles = StyleSheet.create({
   backIconContainer: { marginRight: 12 },
   backSymbol: { fontSize: 26, color: '#E3F2FD' },
 
-  // Club Info in Top Bar
-  clubInfo: { flexDirection: 'row', alignItems: 'center', flex: 1 },
-  clubLogo: {
-    width: 45,
-    height: 45,
-    borderRadius: 50,
-    marginRight: 12,
-    backgroundColor: '#E3F2FD',
-  },
-  clubDetails: { flex: 1 },
-  clubName: { fontSize: 20, fontWeight: 'bold', color: '#E3F2FD' },
-  clubDescription: { fontSize: 14, color: '#BBDEFB' },
+  // Department Info in Top Bar
+  deptInfo: { flexDirection: 'row', alignItems: 'center', flex: 1 },
+  deptDetails: { flex: 1 },
+  deptName: { fontSize: 20, fontWeight: 'bold', color: '#E3F2FD' },
+  deptDescription: { fontSize: 14, color: '#BBDEFB' },
   logoImage: {
     width: 40,
     height: 40,
     borderRadius: 20,
     marginRight: 10,
   },
+
   // Section Styles
   section: {
     marginBottom: 25,
@@ -170,6 +167,4 @@ const styles = StyleSheet.create({
   },
 });
 
-
-
-export default AboutUs;
+export default AboutUsDept;

@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator, Image } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-
-const HomeScreen = ({ navigation }) => {
+import logo from '../assets/logo.png'; 
+const HomeScreen = ({ navigation, route }) => {
   const [noticesc, setNoticesc] = useState([]);
   const [noticesd, setNoticesd] = useState([]);
   const [loadingc, setLoadingc] = useState(true);
   const [loadingd, setLoadingd] = useState(true);
-    
   const categories = ['Sports', 'Academics', 'Cultural', 'Technical', 'Others'];
 
   useEffect(() => {
@@ -33,7 +32,6 @@ const HomeScreen = ({ navigation }) => {
           setLoadingc(false);
         }
       );
-  
     const unsubscribeNoticesdept = firestore()
       .collection('notice')
       .where('userType', '==', 'department')
@@ -56,7 +54,6 @@ const HomeScreen = ({ navigation }) => {
           setLoadingd(false);
         }
       );
-  
     return () => {
       unsubscribeNotices();
       unsubscribeNoticesdept();
@@ -64,17 +61,15 @@ const HomeScreen = ({ navigation }) => {
   }, []);
   return (
     <ScrollView style={styles.container}>
-      {/* Top Bar */}
-      <View style={styles.topBar}>
-        <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.icon}>
-          <Text style={styles.iconText}>☰</Text>
-        </TouchableOpacity>
-        <Text style={styles.logo}>Infonix</Text>
-        <TouchableOpacity onPress={() => { /* open search */ }} style={styles.icon}>
-          <Text style={styles.iconText}></Text>
-        </TouchableOpacity>
-      </View>
-
+    {/* Top Bar */}
+    <View style={styles.topBar}>
+      <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.icon}>
+        <Text style={styles.iconText}>☰</Text>
+      </TouchableOpacity>
+      <Text style={styles.logo}>Infonix</Text>
+      {/* Logo Image */}
+      <Image source={logo} style={styles.logoImage} />
+    </View>
       {/* Notices Carousel */}
       <View style={styles.carousel}>
         <Text style={styles.carouselTitle}>Recent Club Notices</Text>
@@ -83,10 +78,11 @@ const HomeScreen = ({ navigation }) => {
                     <ActivityIndicator size="large" color="#007bff" />
                   ) : noticesc.length > 0 ? (
                     noticesc.map(notice => (
+                      <TouchableOpacity onPress={()=>navigation.navigate('DisplayNotice',{noticeId:notice.id})}>
                       <View key={notice.id} style={[styles.card, styles.cardElevated]}>
                         <Image 
                           source={{ uri: notice.imageUrl || 'https://via.placeholder.com/380' }} 
-                          style={styles.cardImage} 
+                          style={styles.cardImage}
                         />
                         <View>
                           <Text style={styles.cardTitle}>{notice.category}</Text>
@@ -94,6 +90,7 @@ const HomeScreen = ({ navigation }) => {
                           <Text style={styles.cardDescription}>{notice.description}</Text>
                         </View>
                       </View>
+                      </TouchableOpacity>
                     ))
                   ) : (
                     <Text style={styles.noNoticesText}>No notices available.</Text>
@@ -107,10 +104,11 @@ const HomeScreen = ({ navigation }) => {
                     <ActivityIndicator size="large" color="#007bff" />
                   ) : noticesd.length > 0 ? (
                     noticesd.map(notice => (
+                      <TouchableOpacity onPress={()=>navigation.navigate('DisplayNotice',{noticeId:notice.id})}>
                       <View key={notice.id} style={[styles.card, styles.cardElevated]}>
                         <Image 
-                          source={{ uri: notice.imageUrl || 'https://via.placeholder.com/380' }} 
-                          style={styles.cardImage} 
+                          source={{ uri: notice.imageUrl || 'https://via.placeholder.com/380' }}
+                          style={styles.cardImage}
                         />
                         <View>
                           <Text style={styles.cardTitle}>{notice.category}</Text>
@@ -118,6 +116,7 @@ const HomeScreen = ({ navigation }) => {
                           <Text style={styles.cardDescription}>{notice.description}</Text>
                         </View>
                       </View>
+                      </TouchableOpacity>
                     ))
                   ) : (
                     <Text style={styles.noNoticesText}>No notices available.</Text>
@@ -127,20 +126,20 @@ const HomeScreen = ({ navigation }) => {
 
       {/* Clubs Section */}
       <View style={styles.clubsSection}>
-        <Text style={styles.sectionTitle}>Clubs</Text>
+        <Text style={styles.sectionTitle}>Clubs/Departments</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <TouchableOpacity
             style={styles.clubButton}
-            onPress={() => navigation.navigate('ClubDashboard', { clubName: 'Algobyte' })}
+            onPress={() => navigation.navigate('ClubDashboard', { clubName: 'Algobyte',userId:'k8sjV4l5XLutzj3OAMtY' })}
           >
             <Text style={styles.clubName}>Algobyte</Text>
           </TouchableOpacity>
-          {/* <TouchableOpacity
+          <TouchableOpacity
             style={styles.clubButton}
-            onPress={() => navigation.navigate('ClubDashboard', { clubName: 'Club B' })}
+            onPress={() => navigation.navigate('DeptDashboard', { deptName: 'Aim and Act', userId:'WChffex9L1ZZnJMN9ohn'})}
           >
-            <Text style={styles.clubName}>Club B</Text>
-          </TouchableOpacity> */}
+            <Text style={styles.clubName}>Aim and Act</Text>
+          </TouchableOpacity>
         </ScrollView>
       </View>
 
@@ -149,18 +148,16 @@ const HomeScreen = ({ navigation }) => {
       <Text style={styles.sectionTitle}>Categories</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {categories.map(category => (
-          <TouchableOpacity 
-            key={category} 
-            style={styles.clubButton} 
+          <TouchableOpacity
+            key={category}
+            style={styles.clubButton}
             onPress={() => navigation.navigate('CategoryNoticesScreen', { category })}
           >
             <Text style={styles.categoryText}>{category}</Text>
           </TouchableOpacity>
         ))}
-    
       </ScrollView>
       </View>
-  
     </ScrollView>
   );
 };
@@ -171,18 +168,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 15,
-    backgroundColor: '#007bff',
-    borderBottomLeftRadius: 25,
-    borderBottomRightRadius: 25,
+    backgroundColor:'rgb(18, 8, 91)',
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
     elevation: 3,
   },
+  logoImage: {
+    width: 60,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
+  },
   icon: { padding: 5 },
-  iconText: { color: '#fff', fontSize: 20 },
-  logo: { fontSize: 22, color: '#fff', fontWeight: 'bold' },
+  iconText: { color: '#fff', fontSize: 25 },
+  logo: { fontSize: 30, color: '#fff', fontWeight: 'bold' },
   carousel: {
     marginTop: 20,
     padding: 10,
@@ -194,7 +195,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  carouselTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 10, color: '#212529' },
+  carouselTitle: { fontSize: 28, fontWeight: 'bold', marginBottom: 10, color: '#212529' },
   notice: {
     backgroundColor: '#ffffff',
     padding: 15,
@@ -268,10 +269,11 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   cardDescription: {
-    color: '#758283',
-    fontSize: 12,
+    color: '#000000',
+    fontSize: 15,
     marginBottom: 12,
     marginTop: 6,
+    marginLeft: 6,
     flexShrink: 1,
   },
   categoriesContainer: {

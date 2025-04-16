@@ -147,6 +147,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 10,
     marginBottom: 5,
+
   },
   studentName: {
     fontSize: 16,
@@ -169,7 +170,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   submitButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#28a745',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',

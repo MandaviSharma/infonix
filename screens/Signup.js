@@ -16,6 +16,7 @@ const Signup = ({ navigation }) => {
       console.log('User account created & signed in!');
       // Navigate to MainApp on successful signup
       navigation.replace('MainApp', { userType: 'student' });
+    // eslint-disable-next-line no-catch-shadow
     } catch (error) {
       console.error(error);
       if (error.code === 'auth/email-already-in-use') {
@@ -23,7 +24,7 @@ const Signup = ({ navigation }) => {
       } else if (error.code === 'auth/invalid-email') {
         Alert.alert("Error", "That email address is invalid!");
       } else {
-        Alert.alert("Error", "Signup failed. Please try again.");
+        Alert.alert('Error', 'Signup failed. Please try again.');
       }
     }
   };

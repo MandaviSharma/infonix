@@ -5,14 +5,11 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import firestore from '@react-native-firebase/firestore';
 
 const AddNotice = ({ navigation, route }) => {
-  const { userType, userId } = route.params; // Get userType and userId from navigation params
-  console.log("AddNotice - Received params:", userType, userId); // Debug log
-
+  const { userType, userId } = route.params;
   const [category, setCategory] = useState('');
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [noticeImage, setNoticeImage] = useState(null);
-  
 
   // Function to handle image selection
   const handleSelectImage = () => {
@@ -23,7 +20,6 @@ const AddNotice = ({ navigation, route }) => {
         Alert.alert('Error', 'Something went wrong with the image picker');
       } else if (response.assets && response.assets.length > 0) {
         const imageUri = response.assets[0].uri;
-        console.log('Selected Image URI:', imageUri); // Debug log
         setNoticeImage(imageUri);
       }
     });
@@ -45,8 +41,8 @@ const AddNotice = ({ navigation, route }) => {
 
     try {
 
-    let collectionName = userType === "club" ? "Clubs" : "Department";
-    let nameField = userType === "club" ? "Club_name" : "Department_name";
+    let collectionName = userType === 'club' ? 'Clubs' : 'Department';
+    let nameField = userType === 'club' ? 'Club_name' : 'Department_name';
 
     await firestore()
       .collection(collectionName)
@@ -56,32 +52,31 @@ const AddNotice = ({ navigation, route }) => {
         if (!doc.exists) {
           throw new Error(`${userType} not found`);
         }
-        
         const userData = doc.data();
         const nameValue = userData[nameField];
-        console.log(userData)
+        console.log(userData);
         firestore()
-          .collection("notice")
+          .collection('notice')
           .add({
             category,
             description,
-            imageUrl:noticeImage, 
+            imageUrl:noticeImage,
             timestamp: firestore.FieldValue.serverTimestamp(),
             userId,
             userType,
             [nameField]: nameValue, // Dynamically adding name field
           });
-          
+
       setLoading(false);
       Alert.alert('Success', 'Notice posted successfully!', [
         { text: 'OK', onPress: () => navigation.goBack() },
       ]);
-    })} catch (error) {
+    });} catch (error) {
       setLoading(false);
       console.error('Error posting notice:', error);
       Alert.alert('Error', 'Failed to post notice. Please try again.');
       }
-    
+
   };
 
   return (

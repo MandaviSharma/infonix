@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, Text, Image,TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 
 const UpdateDashboard = ({ navigation, route}) => {
-  const { userType, userId } = route.params; 
+  const { userType, userId } = route.params;
 
-  
-  const [clubName, setClubName] = useState('Tech Club');
+  const [clubName, setClubName] = useState('');
   const [clubDescription, setClubDescription] = useState('');
   const [members, setMembers] = useState('');
   const [mentors, setMentors] = useState('');
@@ -14,15 +13,24 @@ const UpdateDashboard = ({ navigation, route}) => {
   const [email, setEmail] = useState('');
   const [instagram, setInstagram] = useState('');
   const [linkedin, setLinkedin] = useState('');
-  const [posts, setPosts] = useState([]);
   
-  
-  // Fetch Club Details
+  // Fetch Club Details on Component Mount
+  useEffect(() => {
+    if (userId) {
+      fetchClubDetails(userId);
+    }
+  }, [userId]);
+
   const fetchClubDetails = async (userId) => {
     try {
+      console.log("Fetching data for club ID:", userId);
       const doc = await firestore().collection('Clubs').doc(userId).get();
+      
       if (doc.exists) {
         const data = doc.data();
+        console.log("Fetched Data:", data);
+        
+        setClubName(data.Club_name || '');
         setClubDescription(data.description || '');
         setMembers(data.members || '');
         setMentors(data.mentors || '');
@@ -30,14 +38,16 @@ const UpdateDashboard = ({ navigation, route}) => {
         setEmail(data.email || '');
         setInstagram(data.instagram || '');
         setLinkedin(data.linkedin || '');
-        setPosts(data.posts || []);
+       
+      } else {
+        console.warn("No club found with this ID in Firestore.");
       }
     } catch (error) {
-      console.error('Error fetching club details:', error);
+      console.error("Error fetching club details:", error);
     }
   };
+  
 
-  // Update Club Details
   const updateClubDetails = async () => {
     if (!userId) {
       Alert.alert('Error', 'Club ID not found!');
@@ -46,7 +56,7 @@ const UpdateDashboard = ({ navigation, route}) => {
 
     try {
       await firestore().collection('Clubs').doc(userId).update({
-        name: clubName,
+        Club_name: clubName,
         description: clubDescription,
         members,
         mentors,
@@ -54,33 +64,18 @@ const UpdateDashboard = ({ navigation, route}) => {
         email,
         instagram,
         linkedin,
-        posts,
       });
 
-      Alert.alert('Success', 'Club details updated successfully!');
+      Alert.alert('Success', 'Club details updated successfully!', [
+        { text: 'OK', onPress: () => navigation.goBack() }, // Navigate back after update
+      ]);
     } catch (error) {
       console.error('Error updating club details:', error);
       Alert.alert('Error', 'Failed to update details.');
     }
   };
 
-  // Delete Post
-  const deletePost = async (postIndex) => {
-    const updatedPosts = posts.filter((_, index) => index !== postIndex);
-
-    try {
-      await firestore().collection('Clubs').doc(clubID).update({
-        posts: updatedPosts,
-      });
-
-      setPosts(updatedPosts);
-      Alert.alert('Success', 'Post deleted successfully!');
-    } catch (error) {
-      console.error('Error deleting post:', error);
-      Alert.alert('Error', 'Failed to delete post.');
-    }
-  };
-
+  
   return (
     <ScrollView style={styles.container}>
       {/* Top Bar */}
@@ -89,10 +84,15 @@ const UpdateDashboard = ({ navigation, route}) => {
           <Text style={styles.backSymbol}>{'←'}</Text>
         </TouchableOpacity>
         <View style={styles.clubInfo}>
+          <Image
+                      source={require('../assets/club_logo.jpg')}
+                      style={styles.clubLogo}
+                      resizeMode="contain"
+                    />
           <View style={styles.logoPlaceholder} />
           <Text style={styles.clubName}>{clubName}</Text>
         </View>
-      </View>
+     </View>
 
       {/* About Us Section */}
       <View style={styles.section}>
@@ -114,9 +114,7 @@ const UpdateDashboard = ({ navigation, route}) => {
         <Text style={styles.label}>Phone Number</Text>
         <TextInput style={styles.input} value={phoneNo} onChangeText={setPhoneNo} keyboardType="phone-pad" />
 
-        <Text style={styles.label}>Email ID</Text>
-        <TextInput style={styles.input} value={email} onChangeText={setEmail} keyboardType="email-address" />
-
+       
         <Text style={styles.label}>Instagram ID</Text>
         <TextInput style={styles.input} value={instagram} onChangeText={setInstagram} />
 
@@ -124,26 +122,6 @@ const UpdateDashboard = ({ navigation, route}) => {
         <TextInput style={styles.input} value={linkedin} onChangeText={setLinkedin} />
       </View>
 
-      {/* Existing Posts */}
-      <View style={styles.section}>
-        <Text style={styles.label}>Existing Posts</Text>
-        {posts.map((post, index) => (
-          <View key={index} style={styles.post}>
-            <Text style={styles.postText}>{post}</Text>
-            <View style={styles.postActions}>
-              <TouchableOpacity
-                style={styles.actionButton}
-                onPress={() => navigation.navigate('AddNotice', { post, index, clubID })}
-              >
-                <Text style={styles.actionButtonText}>Edit</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.actionButton} onPress={() => deletePost(index)}>
-                <Text style={styles.actionButtonText}>Delete</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        ))}
-      </View>
 
       {/* Update Button */}
       <TouchableOpacity style={styles.button} onPress={updateClubDetails}>
