@@ -40,7 +40,6 @@ const ProfileEditScreen = ({ navigation }) => {
     return unsubscribe;
   }, []);
 
-  // Function to pick an image and save it
   const pickImage = () => {
     const options = { mediaType: 'photo', quality: 1 };
     launchImageLibrary(options, async (response) => {
@@ -64,21 +63,29 @@ const ProfileEditScreen = ({ navigation }) => {
     });
   };
 
-  // Function to save updated profile details
   const handleSave = async () => {
     const user = auth.currentUser;
     if (user) {
       const userId = user.uid;
 
       try {
-        await firestore().collection('Students').doc(userId).update({
+        const docRef = firestore().collection('Students').doc(userId);
+        const docSnapshot = await docRef.get();
+
+        const data = {
           name,
           contact,
           email,
           course,
           studentID,
           profilePic,
-        });
+        };
+
+        if (docSnapshot.exists) {
+          await docRef.update(data);
+        } else {
+          await docRef.set(data);
+        }
 
         await AsyncStorage.multiSet([
           ['name', name],
@@ -104,7 +111,6 @@ const ProfileEditScreen = ({ navigation }) => {
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Edit Profile</Text>
 
-      {/* Profile Picture Selection */}
       <View style={styles.imageContainer}>
         <TouchableOpacity onPress={pickImage}>
           <Image
@@ -115,13 +121,11 @@ const ProfileEditScreen = ({ navigation }) => {
         <Text style={styles.imageText}>Tap to change profile picture</Text>
       </View>
 
-      {/* Name Input */}
       <View style={styles.section}>
         <Text style={styles.label}>Name</Text>
         <TextInput style={styles.input} value={name} onChangeText={setName} />
       </View>
 
-      {/* Contact Input */}
       <View style={styles.section}>
         <Text style={styles.label}>Contact</Text>
         <TextInput
@@ -132,19 +136,16 @@ const ProfileEditScreen = ({ navigation }) => {
         />
       </View>
 
-      {/* Course Input */}
       <View style={styles.section}>
         <Text style={styles.label}>Course</Text>
         <TextInput style={styles.input} value={course} onChangeText={setCourse} />
       </View>
 
-      {/* StudentID Input */}
       <View style={styles.section}>
         <Text style={styles.label}>Student ID</Text>
         <TextInput style={styles.input} value={studentID} onChangeText={setStudentID} />
       </View>
 
-      {/* Save Button */}
       <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
         <Text style={styles.saveButtonText}>Save Changes</Text>
       </TouchableOpacity>

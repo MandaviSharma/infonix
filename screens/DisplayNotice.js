@@ -4,7 +4,7 @@ import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
 const DisplayNotice = ({ navigation, route }) => {
-  const { noticeId } = route.params || {};
+  const { noticeId,email } = route.params || {};
   if (!noticeId) {
     return <Text>Error loading notice</Text>;
   }
@@ -48,8 +48,8 @@ const DisplayNotice = ({ navigation, route }) => {
       await firestore().collection('queries').add({
         noticeId,
         text: queryText,
-        userId: auth().currentUser?.userId || 'Student',
-        userName: auth().currentUser?.userName || 'Student',
+        userId: auth().currentUser?.email || 'Algobyte',
+        userName: auth().currentUser?.email || 'Algobyte',
       });
       setQueryText('');
     } catch (error) {

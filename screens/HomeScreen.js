@@ -2,14 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator, Image } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import logo from '../assets/logo.png'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const HomeScreen = ({ navigation, route }) => {
+  const { email } = route.params;
   const [noticesc, setNoticesc] = useState([]);
   const [noticesd, setNoticesd] = useState([]);
   const [loadingc, setLoadingc] = useState(true);
   const [loadingd, setLoadingd] = useState(true);
+  //const [EMAIL, setemail] = useState('');
   const categories = ['Sports', 'Academics', 'Cultural', 'Technical', 'Others'];
 
   useEffect(() => {
+    
+ 
     const unsubscribeNotices = firestore()
       .collection('notice')
       .where('userType', '==', 'club')
@@ -78,7 +83,7 @@ const HomeScreen = ({ navigation, route }) => {
                     <ActivityIndicator size="large" color="#007bff" />
                   ) : noticesc.length > 0 ? (
                     noticesc.map(notice => (
-                      <TouchableOpacity onPress={()=>navigation.navigate('DisplayNotice',{noticeId:notice.id})}>
+                      <TouchableOpacity onPress={()=>navigation.navigate('DisplayNotice',{noticeId:notice.id,email:email})}>
                       <View key={notice.id} style={[styles.card, styles.cardElevated]}>
                         <Image 
                           source={{ uri: notice.imageUrl || 'https://via.placeholder.com/380' }} 
@@ -104,7 +109,7 @@ const HomeScreen = ({ navigation, route }) => {
                     <ActivityIndicator size="large" color="#007bff" />
                   ) : noticesd.length > 0 ? (
                     noticesd.map(notice => (
-                      <TouchableOpacity onPress={()=>navigation.navigate('DisplayNotice',{noticeId:notice.id})}>
+                      <TouchableOpacity onPress={()=>navigation.navigate('DisplayNotice',{noticeId:notice.id, email:email})}>
                       <View key={notice.id} style={[styles.card, styles.cardElevated]}>
                         <Image 
                           source={{ uri: notice.imageUrl || 'https://via.placeholder.com/380' }}

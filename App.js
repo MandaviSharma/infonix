@@ -45,7 +45,7 @@ const BlueTheme = {
 function MainStack({route}) {
   return (
     <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: '#007BFF' }, headerTintColor: '#FFF' }}>
-      <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} initialParams={route.params} />
       <Stack.Screen name="ClubDashboard" component={ClubDashboard} options={{ headerShown: false }} />
       <Stack.Screen name="DeptDashboard" component={DeptDashboard} options={{ headerShown: false }} />
       <Stack.Screen name="ContactUs" component={ContactUs} options={{ headerShown: false }} initialParams={route.params}/>

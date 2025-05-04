@@ -89,7 +89,7 @@ const UpdateDashboard = ({ navigation, route}) => {
                       style={styles.clubLogo}
                       resizeMode="contain"
                     />
-          <View style={styles.logoPlaceholder} />
+          {/* <View style={styles.clubLogo} /> */}
           <Text style={styles.clubName}>{clubName}</Text>
         </View>
      </View>
@@ -144,6 +144,7 @@ const styles = StyleSheet.create({
   backSymbol: { fontSize: 24, color: '#fff' },
   clubInfo: { flexDirection: 'row', alignItems: 'center', flex: 1 },
   logoPlaceholder: { width: 40, height: 40, backgroundColor: '#fff', borderRadius: 50, marginRight: 10 },
+  clubLogo: { width: 50, height: 50, borderRadius: 25, marginRight: 15, backgroundColor: '#fff' },
   clubName: { fontSize: 18, fontWeight: 'bold', color: '#fff' },
   section: { marginBottom: 25 },
   label: { fontSize: 16, fontWeight: 'bold', color: '#212529', marginBottom: 8 },

@@ -11,11 +11,17 @@ const Signup = ({ navigation }) => {
 
   // Create User Function
   const createUser = async () => {
+    if(!email.endsWith('@banasthali.in'))
+    {
+      Alert.alert('Only Banasthali emails are allowed');
+      return;
+    }
     try {
       await auth().createUserWithEmailAndPassword(email, password);
       console.log('User account created & signed in!');
       // Navigate to MainApp on successful signup
       navigation.replace('MainApp', { userType: 'student' });
+      
     // eslint-disable-next-line no-catch-shadow
     } catch (error) {
       console.error(error);
